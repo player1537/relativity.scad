@@ -78,14 +78,11 @@ module differed(positive, negative){
 }
 
 // performs the intersection on a list of object classes
-module intersected(class=""){
+module intersected(classes=[""]){
 	if(_has_token($class, $show))
-	intersection(){
-		assign($show=positive)
-			children();
-		assign($show=negative)
-			children();
-	}
+	intersection_for (class = classes)
+	assign($show=class)
+		children();
 }
 
 // like translate(), but use positions relative to the size of the parent object
