@@ -154,7 +154,7 @@ module align(anchors){
 
 // like rotate(), but works by aligning the zaxis to a given vector
 module orient(zaxes, roll=0){
-	assign(zaxes = len(zaxes.x) == undef && anchors.x != undef? [zaxes] : zaxes)
+	assign(zaxes = len(zaxes.x) == undef && zaxes.x != undef? [zaxes] : zaxes)
 	for(zaxis=zaxes)
 	{
 		rotate(_orient_angles(zaxis))
