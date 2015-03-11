@@ -103,7 +103,7 @@ module hulled(class="*"){
 	children();
 }
 
-// performs the union on objects marked as positive space (i.e. objects where $class = positive),
+// performs the union on objects marked as positive space (i.e. objects where $class = positive), 
 // and performs the difference for objects marked as negative space (i.e objects where $class = $negative)
 module differed(negative, positive="*", unaffected=undef){
 	assign(	_positive = _sizzle_parse(positive) )
@@ -123,7 +123,6 @@ module differed(negative, positive="*", unaffected=undef){
 }
 
 // performs the intersection on a list of object classes
-
 module intersected(class1, class2, unaffected=undef){
 	assign(	class1 = _sizzle_parse(class1),
 		class2 = _sizzle_parse(class2))
@@ -139,6 +138,7 @@ module intersected(class1, class2, unaffected=undef){
 		assign($_show=["and", $_show, unaffected])
 			children();
 	}
+}
 
 // like translate(), but use positions relative to the size of the parent object
 // if tilt==true, child objects will also be oriented away from the parent object's center
@@ -164,11 +164,11 @@ module orient(zaxes, roll=0){
 }
 
 // duplicates last instance of box/rod/ball in the call stack
-// useful for performing hull() or difference() between parent and child
+// useful for performing hull() or difference() between parent and child 
 module parent(size=undef, anchor=center){
 	echo("WARNING: parent() module is depreciated. Please use CSG operators such as differed() and hulled().");
 	assign(size = size==undef? $parent_size : size)
-	if($parent_type=="box")
+	if($parent_type=="box") 
 		box(size, anchor=anchor)
 			children();
 	else if($parent_type=="rod")
@@ -208,21 +208,6 @@ module box(	size=[1,1,1],
 			children();
 	}
 }
-
-module _box(size, anchor=$inward) {
-	assign(size = len(size)==undef && size!= undef? [size,size,size] : size)
-	assign( $parent_size = size,
-			$parent_type="box",
-			$parent_bounds=[size.x < indeterminate/2? size.x : 0,
-							size.y < indeterminate/2? size.y : 0,
-							size.z < indeterminate/2? size.z : 0],
-			$inward=center,
-			$outward=center){
-		translate(-hammard(anchor, $parent_bounds)/2)
-			children();
-	}
-}
-
 // wrapper for cylinder with enhanced centering functionality and cascading children
 module rod(	size=[1,1,1], 
 			h=undef, d=undef, r=undef, 
@@ -258,31 +243,6 @@ module rod(	size=[1,1,1],
 			children();
 	}
 }
-
-module _rod(size=[1,1,1],
-			h=indeterminate, d=indeterminate, r=undef,
-			anchor=$inward, orientation=top) {
-	//diameter is used internally to simplify the maths
-	assign(d = r!=undef? 2*r : d)
-	assign(size =	len(size)==undef && size!= undef?
-							[size,size,size] :
-						d<indeterminate-1 || h<indeterminate-1?
-							[d,d,h] :
-						size)
-	assign(bounds = _rotate_matrix(_orient_angles(orientation)) * [size.x,size.y,size.z,1])
-	assign($parent_size = size,
-			$parent_type="rod",
-			$parent_bounds=[abs(bounds.x) < indeterminate/2? abs(bounds.x) : 0,
-							abs(bounds.y) < indeterminate/2? abs(bounds.y) : 0,
-							abs(bounds.z) < indeterminate/2? abs(bounds.z) : 0],
-			$parent_radius=sqrt(pow(h/2,2)+pow(d/2,2)),
-			$inward=center,
-			$outward=center){
-		translate(-hammard(anchor, $parent_bounds)/2)
-			children();
-	}
-}
-
 // wrapper for cylinder with enhanced centering functionality and cascading children
 module ball(size=[1,1,1], 
 			h=undef, d=undef, r=undef, 
@@ -298,8 +258,8 @@ module ball(size=[1,1,1],
 						d != undef && h != undef?
 							[d,d,h] :
 						size)
-	assign($parent_size = size,
-			$parent_type="ball",
+	assign($parent_size = size, 
+			$parent_type="ball", 
 			$parent_bounds=[size.x < indeterminate/2? size.x : 0,
 							size.y < indeterminate/2? size.y : 0,
 							size.z < indeterminate/2? size.z : 0],
@@ -314,24 +274,29 @@ module ball(size=[1,1,1],
 	}
 }
 
+
+
+
+
+
 //matrix rotation functions
 function _rotate_x_matrix(a)=
-							[[1,0,0,0],
-                      [0,cos(a),-sin(a),0],
-                      [0,sin(a),cos(a),0],
-                      [0,0,0,1]];
+							[[1,0,0,0], 
+                      [0,cos(a),-sin(a),0], 
+                      [0,sin(a),cos(a),0], 
+                      [0,0,0,1]]; 
 
 function _rotate_y_matrix(a)=
-							[[cos(a),0,sin(a),0],
-                      [0,1,0,0],
-                      [-sin(a),0,cos(a),0],
-                      [0,0,0,1]];
+							[[cos(a),0,sin(a),0], 
+                      [0,1,0,0], 
+                      [-sin(a),0,cos(a),0], 
+                      [0,0,0,1]]; 
 
 function _rotate_z_matrix(a)=
-							[[cos(a),-sin(a),0,0],
-                      [sin(a),cos(a),0,0],
-                      [0,0,1,0],
-                      [0,0,0,1]];
+							[[cos(a),-sin(a),0,0], 
+                      [sin(a),cos(a),0,0], 
+                      [0,0,1,0], 
+                      [0,0,0,1]]; 
 
 function _rotate_matrix(a)=_rotate_z_matrix(a.z)*_rotate_y_matrix(a.y)*_rotate_x_matrix(a.x);
 
@@ -525,6 +490,7 @@ function _replace_between_range(string, pattern, replacement, range, ignore_case
 	: 
 		string
 	;
+
 
 
 
@@ -734,6 +700,7 @@ function _parse_rx(	rx, 		ops=[], 	args=[], 				i=0) =
 			_parse_rx(rx, _pop(ops), 	_push_rx_op(args, ops[0]), 		i)
 	;
 
+	
 function _can_concat(regex, i) = 
 	regex[i-1] != undef &&
 	(!_is_in(regex[i-1], "|(") || regex[i-2] == "\\");
@@ -1053,9 +1020,11 @@ function _transform_case(string, encoded, offset, index=0) =
 		""
 	: len(encoded[index]) <= 0?
 		str(substring(string, index, 1),	_transform_case(string, encoded, offset, index+1))
-	:
+	: 
 		str(chr(encoded[index][0]+offset),	_transform_case(string, encoded, offset, index+1))
 	;
+
+
 
 function join(strings, delimeter) = 
 	strings == undef?
